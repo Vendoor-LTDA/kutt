@@ -57,6 +57,8 @@ interface Form {
   description?: string;
   expire_in?: string;
   showAdvanced?: boolean;
+  image_url?: string;
+  title?: string;
 }
 
 const defaultDomain = publicRuntimeConfig.DEFAULT_DOMAIN;
@@ -347,7 +349,34 @@ const Shortener = () => {
                 maxWidth="100%"
               />
             </Col>
-            <Col width={[1, 2 / 3]} ml={[0, 26]}>
+          </Flex>
+          <Flex mt={[3]} flexDirection={["column", "row"]}>
+            <Col width={[1]}>
+              <Text
+                as="label"
+                {...label("title")}
+                fontSize={[14, 15]}
+                mb={2}
+                bold
+              >
+                Title:
+              </Text>
+              <TextInput
+                {...text("title")}
+                placeholder="Title"
+                data-lpignore
+                pl={[3, 24]}
+                pr={[3, 24]}
+                placeholderSize={[13, 14]}
+                fontSize={[14, 15]}
+                height={[40, 44]}
+                width={1}
+                maxWidth="100%"
+              />
+            </Col>
+          </Flex>
+          <Flex mt={[3]} flexDirection={["column", "row"]}>
+            <Col width={[1]}>
               <Text
                 as="label"
                 {...label("description")}
@@ -360,6 +389,31 @@ const Shortener = () => {
               <TextInput
                 {...text("description")}
                 placeholder="Description"
+                data-lpignore
+                pl={[3, 24]}
+                pr={[3, 24]}
+                placeholderSize={[13, 14]}
+                fontSize={[14, 15]}
+                height={[40, 44]}
+                width={1}
+                maxWidth="100%"
+              />
+            </Col>
+          </Flex>
+          <Flex mt={[3]} flexDirection={["column", "row"]}>
+            <Col width={[1]}>
+              <Text
+                as="label"
+                {...label("image_url")}
+                fontSize={[14, 15]}
+                mb={2}
+                bold
+              >
+                Image URL:
+              </Text>
+              <TextInput
+                {...text("image_url")}
+                placeholder="URL image..."
                 data-lpignore
                 pl={[3, 24]}
                 pr={[3, 24]}

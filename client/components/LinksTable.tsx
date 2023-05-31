@@ -116,6 +116,8 @@ interface EditForm {
   description?: string;
   expire_in?: string;
   password?: string;
+  image_url?: string;
+  title?: string;
 }
 
 const Row: FC<RowProps> = ({ index, link, setDeleteModal }) => {
@@ -128,6 +130,8 @@ const Row: FC<RowProps> = ({ index, link, setDeleteModal }) => {
       target: link.target,
       address: link.address,
       description: link.description,
+      title: link.title,
+      image_url: link.image_url,
       expire_in: link.expire_in
         ? ms(differenceInMilliseconds(new Date(link.expire_in), new Date()), {
             long: true
@@ -413,7 +417,59 @@ const Row: FC<RowProps> = ({ index, link, setDeleteModal }) => {
               </Col>
             </Flex>
             <Flex alignItems="flex-start" width={1} mt={3}>
-              <Col alignItems="flex-start" mr={3}>
+              <Col alignItems="flex-start">
+                <Text
+                  {...label("expire_in")}
+                  as="label"
+                  mb={2}
+                  fontSize={[14, 15]}
+                  bold
+                >
+                  Expire in:
+                </Text>
+                <Flex as="form">
+                  <TextInput
+                    {...text("expire_in")}
+                    placeholder="2 minutes/hours/days"
+                    placeholderSize={[13, 14]}
+                    fontSize={[14, 15]}
+                    height={[40, 44]}
+                    width={[1, 300, 420]}
+                    pl={[3, 24]}
+                    pr={[3, 24]}
+                    required
+                  />
+                </Flex>
+              </Col>
+            </Flex>
+            <Flex alignItems="flex-start" width={1} mt={3}>
+              <Col alignItems="flex-start">
+                <Text
+                  {...label("title")}
+                  as="label"
+                  mb={2}
+                  fontSize={[14, 15]}
+                  bold
+                >
+                  Title:
+                </Text>
+                <Flex as="form">
+                  <TextInput
+                    {...text("title")}
+                    placeholder="title..."
+                    placeholderSize={[13, 14]}
+                    fontSize={[14, 15]}
+                    height={[40, 44]}
+                    width={[1, 300, 420]}
+                    pl={[3, 24]}
+                    pr={[3, 24]}
+                    required
+                  />
+                </Flex>
+              </Col>
+            </Flex>
+            <Flex alignItems="flex-start" width={1} mt={3}>
+              <Col alignItems="flex-start">
                 <Text
                   {...label("description")}
                   as="label"
@@ -437,24 +493,26 @@ const Row: FC<RowProps> = ({ index, link, setDeleteModal }) => {
                   />
                 </Flex>
               </Col>
+            </Flex>
+            <Flex alignItems="flex-start" width={1} mt={3}>
               <Col alignItems="flex-start">
                 <Text
-                  {...label("expire_in")}
+                  {...label("image_url")}
                   as="label"
                   mb={2}
                   fontSize={[14, 15]}
                   bold
                 >
-                  Expire in:
+                  Image URL:
                 </Text>
                 <Flex as="form">
                   <TextInput
-                    {...text("expire_in")}
-                    placeholder="2 minutes/hours/days"
+                    {...text("image_url")}
+                    placeholder="Image URL..."
                     placeholderSize={[13, 14]}
                     fontSize={[14, 15]}
                     height={[40, 44]}
-                    width={[1, 210, 240]}
+                    width={[1, 300, 420]}
                     pl={[3, 24]}
                     pr={[3, 24]}
                     required

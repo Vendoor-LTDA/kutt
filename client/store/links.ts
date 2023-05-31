@@ -21,6 +21,8 @@ export interface Link {
   updated_at: string;
   user_id?: number;
   visit_count: number;
+  image_url?: string;
+  title?: string;
 }
 
 export interface NewLink {
