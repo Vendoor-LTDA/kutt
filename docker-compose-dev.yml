@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+  redis:
+    image: redis:6.0-alpine
+    ports:
+      - 6379:6379
+    volumes:
+      - shortener_redis_data:/data
+
+  postgres:
+    image: postgres:12-alpine
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: kutt
+    ports:
+      - 5432:5432
+    volumes:
+      - shortener_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  shortener_redis_data:
+  shortener_postgres_data:
