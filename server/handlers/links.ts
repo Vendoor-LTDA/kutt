@@ -11,6 +11,7 @@ import { CreateLinkReq } from "./types";
 import { CustomError } from "../utils";
 import transporter from "../mail/mail";
 import * as utils from "../utils";
+import * as openGraph from './openGraph';
 import query from "../queries";
 import queue from "../queues";
 import env from "../env";
@@ -312,6 +313,10 @@ export const redirect = (app: ReturnType<typeof next>): Handler => async (
       referrer: req.get("Referrer"),
       link
     });
+  }
+
+  if (isBot && link.image_url && link.title && link.description) {
+    return res.header('Content-Type', 'application/html').send(openGraph.render(link));
   }
 
   // 8. Redirect to target
