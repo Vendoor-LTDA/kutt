@@ -76,7 +76,9 @@ interface Link {
   banned_by_id?: number;
   banned: boolean;
   created_at: string;
+  title?: string;
   description?: string;
+  image_url?: string;
   domain_id?: number;
   expire_in: string;
   id: number;

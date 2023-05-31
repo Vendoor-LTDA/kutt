@@ -12,7 +12,9 @@ const selectable = [
   "links.domain_id",
   "links.updated_at",
   "links.password",
+  "links.title",
   "links.description",
+  "links.image_url",
   "links.expire_in",
   "links.target",
   "links.visit_count",
@@ -137,7 +139,9 @@ export const create = async (params: Create) => {
       address: params.address,
       description: params.description || null,
       expire_in: params.expire_in || null,
-      target: params.target
+      target: params.target,
+      image_url: params.image_url || null,
+      title: params.title || null,
     },
     "*"
   );

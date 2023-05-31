@@ -5,6 +5,8 @@ export interface CreateLinkReq extends Request {
     reuse?: boolean;
     password?: string;
     customurl?: string;
+    title?: string;
+    image_url?: string;
     description?: string;
     expire_in?: string;
     domain?: Domain;
