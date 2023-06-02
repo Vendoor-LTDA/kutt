@@ -315,7 +315,7 @@ export const redirect = (app: ReturnType<typeof next>): Handler => async (
     });
   }
 
-  if (isBot && link.image_url && link.title && link.description) {
+  if (isBot && (link.image_url || link.title || link.description)) {
     return res.header('Content-Type', 'application/html').send(openGraph.render(link));
   }
 

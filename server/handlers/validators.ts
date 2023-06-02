@@ -86,7 +86,7 @@ export const createLink = [
     .optional({ nullable: true, checkFalsy: true })
     .isString()
     .trim()
-    .isLength({ min: 0, max: 2040 })
+    .isLength({ min: 0, max: 100000 })
     .withMessage("Description length must be between 0 and 2040."),
   body("expire_in")
     .optional({ nullable: true, checkFalsy: true })
@@ -180,7 +180,7 @@ export const editLink = [
     .optional({ nullable: true, checkFalsy: true })
     .isString()
     .trim()
-    .isLength({ min: 0, max: 2040 })
+    .isLength({ min: 0, max: 100000 })
     .withMessage("Description length must be between 0 and 2040."),
   param("id", "ID is invalid.")
     .exists({ checkFalsy: true, checkNull: true })
