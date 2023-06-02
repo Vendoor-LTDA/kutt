@@ -11,7 +11,7 @@ import { CreateLinkReq } from "./types";
 import { CustomError } from "../utils";
 import transporter from "../mail/mail";
 import * as utils from "../utils";
-import * as openGraph from './openGraph';
+import * as openGraph from "./openGraph";
 import query from "../queries";
 import queue from "../queues";
 import env from "../env";
@@ -257,71 +257,72 @@ export const ban: Handler = async (req, res) => {
   return res.status(200).send({ message: "Banned link successfully." });
 };
 
-export const redirect = (app: ReturnType<typeof next>): Handler => async (
-  req,
-  res,
-  next
-) => {
-  const isBot = isbot(req.headers["user-agent"]);
-  const isPreservedUrl = validators.preservedUrls.some(
-    item => item === req.path.replace("/", "")
-  );
+export const redirect =
+  (app: ReturnType<typeof next>): Handler =>
+  async (req, res, next) => {
+    const isBot = isbot(req.headers["user-agent"]);
+    const isPreservedUrl = validators.preservedUrls.some(
+      (item) => item === req.path.replace("/", "")
+    );
 
-  if (isPreservedUrl) return next();
+    if (isPreservedUrl) return next();
 
-  // 1. If custom domain, get domain info
-  const host = utils.removeWww(req.headers.host);
-  const domain =
-    host !== env.DEFAULT_DOMAIN
-      ? await query.domain.find({ address: host })
-      : null;
+    // 1. If custom domain, get domain info
+    const host = utils.removeWww(req.headers.host);
+    const domain =
+      host !== env.DEFAULT_DOMAIN
+        ? await query.domain.find({ address: host })
+        : null;
 
-  // 2. Get link
-  const address = req.params.id.replace("+", "");
-  const link = await query.link.find({
-    address,
-    domain_id: domain ? domain.id : null
-  });
-
-  // 3. When no link, if has domain redirect to domain's homepage
-  // otherwise redirect to 404
-  if (!link) {
-    return res.redirect(302, domain ? domain.homepage : "/404");
-  }
-
-  // 4. If link is banned, redirect to banned page.
-  if (link.banned) {
-    return res.redirect("/banned");
-  }
-
-  // 5. If wants to see link info, then redirect
-  const doesRequestInfo = /.*\+$/gi.test(req.params.id);
-  if (doesRequestInfo && !link.password) {
-    return app.render(req, res, "/url-info", { target: link.target });
-  }
-
-  // 6. If link is protected, redirect to password page
-  if (link.password) {
-    return res.redirect(`/protected/${link.uuid}`);
-  }
-
-  // 7. Create link visit
-  if (link.user_id && !isBot) {
-    queue.visit.add({
-      headers: req.headers,
-      realIP: req.realIP,
-      referrer: req.get("Referrer"),
-      link
+    // 2. Get link
+    const address = req.params.id.replace("+", "");
+    const link = await query.link.find({
+      address,
+      domain_id: domain ? domain.id : null
     });
-  }
 
-  if (isBot && (link.image_url || link.title || link.description)) {
-    return res.header('Content-Type', 'application/html').send(openGraph.render(link));
-  }
+    // 3. When no link, if has domain redirect to domain's homepage
+    // otherwise redirect to 404
+    if (!link) {
+      return res.redirect(302, domain ? domain.homepage : "/404");
+    }
 
-  // 8. Redirect to target
-  return res.redirect(link.target);
-};
+    // 4. If link is banned, redirect to banned page.
+    if (link.banned) {
+      return res.redirect("/banned");
+    }
+
+    // 5. If wants to see link info, then redirect
+    const doesRequestInfo = /.*\+$/gi.test(req.params.id);
+    if (doesRequestInfo && !link.password) {
+      return app.render(req, res, "/url-info", { target: link.target });
+    }
+
+    // 6. If link is protected, redirect to password page
+    if (link.password) {
+      return res.redirect(`/protected/${link.uuid}`);
+    }
+
+    // 7. Create link visit
+    if (link.user_id && !isBot) {
+      queue.visit.add({
+        headers: req.headers,
+        realIP: req.realIP,
+        referrer: req.get("Referrer"),
+        link
+      });
+    }
+
+    console.log(req.headers["user-agent"]);
+    console.log(isBot);
+
+    if (isBot && (link.image_url || link.title || link.description)) {
+      return res.send(openGraph.render(link));
+    }
+
+    // 8. Redirect to target
+    return res.redirect(link.target);
+  };
 
 export const redirectProtected: Handler = async (req, res) => {
   // 1. Get link
@@ -365,8 +366,8 @@ export const redirectCustomDomain: Handler = async (req, res, next) => {
   if (
     path === "/" ||
     validators.preservedUrls
-      .filter(l => l !== "url-password")
-      .some(item => item === path.replace("/", ""))
+      .filter((l) => l !== "url-password")
+      .some((item) => item === path.replace("/", ""))
   ) {
     const domain = await query.domain.find({ address: host });
     const redirectURL = domain
