@@ -313,9 +313,6 @@ export const redirect =
       });
     }
 
-    console.log(req.headers["user-agent"]);
-    console.log(isBot);
-
     if (isBot && (link.image_url || link.title || link.description)) {
       return res.send(openGraph.render(link));
     }
