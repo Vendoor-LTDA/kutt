@@ -56,6 +56,14 @@ router.get(
   asyncHandler(link.stats)
 );
 
+router.get(
+  "/:id/visits",
+  asyncHandler(auth.apikey),
+  asyncHandler(auth.jwt),
+  validators.getVisits,
+  asyncHandler(link.visits)
+);
+
 router.post(
   "/:id/protected",
   validators.redirectProtected,

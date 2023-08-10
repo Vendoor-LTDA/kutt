@@ -17,7 +17,8 @@ export const key = {
   domain: (address: string) => `d-${address}`,
   stats: (link_id: number) => `s-${link_id}`,
   host: (address: string) => `h-${address}`,
-  user: (emailOrKey: string) => `u-${emailOrKey}`
+  user: (emailOrKey: string) => `u-${emailOrKey}`,
+  linkVisits: (link_id: string) => `lv-${link_id}`,
 };
 
 export const remove = {

@@ -1,4 +1,4 @@
-import { body, param } from "express-validator";
+import { body, param, query as queryValidator } from "express-validator";
 import { isAfter, subDays, subHours, addMilliseconds } from "date-fns";
 import urlRegex from "url-regex-safe";
 import { promisify } from "util";
@@ -290,6 +290,19 @@ export const getStats = [
       checkNull: true
     })
     .isLength({ min: 36, max: 36 })
+];
+
+export const getVisits = [
+  param("id", "ID is invalid.")
+    .exists({
+      checkFalsy: true,
+      checkNull: true
+    })
+    .isLength({ min: 36, max: 36 }),
+
+  queryValidator("minDate", "Min date is invalid.")
+    .exists({checkFalsy: true, checkNull: true})
+    .isDate(),
 ];
 
 export const signup = [

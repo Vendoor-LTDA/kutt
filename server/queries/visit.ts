@@ -241,3 +241,26 @@ export const find = async (match: Partial<Visit>, total: number) => {
 
   return response;
 };
+
+export const findVisits = async (match: Partial<Visit>, minDate: Date, total: number) => {
+  if (match.link_id) {
+    const key = redis.key.linkVisits(`${match.link_id}_${minDate.toISOString()}`);
+    const cached = await redisClient.get(key);
+    if (cached) return JSON.parse(cached);
+  }
+
+  const response: any = await knex<Visit>("visits")
+    .where(match)
+    .andWhere("created_at", ">=", minDate.toISOString())
+    .sum("total as count")
+    .first();
+  const visitsCount = Number(response?.count || 0);
+
+  if (match.link_id) {
+    const cacheTime = utils.getStatsCacheTime(total);
+    const key = redis.key.linkVisits(`${match.link_id}_${minDate.toISOString()}`);
+    redisClient.set(key, visitsCount, "EX", cacheTime);
+  }
+
+  return visitsCount;
+};

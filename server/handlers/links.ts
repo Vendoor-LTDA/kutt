@@ -401,3 +401,24 @@ export const stats: Handler = async (req, res) => {
     ...utils.sanitize.link(link)
   });
 };
+
+export const visits: Handler = async (req, res) => {
+  const { user } = req;
+  const uuid = req.params.id;
+  const minDate = new Date(req.query.minDate as string);
+
+  const link = await query.link.find({
+    ...(!user.admin && { user_id: user.id }),
+    uuid
+  });
+
+  if (!link) {
+    throw new CustomError("Link could not be found.");
+  }
+
+  const visits = await query.visit.findVisits({ link_id: link.id }, minDate, link.visit_count);
+  return res.status(200).send({
+    visits: Number(visits || 0),
+    ...utils.sanitize.link(link)
+  });
+};
